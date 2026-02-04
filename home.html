@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlowerAI Recognition</title>
+   <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f9fafb;
+      color: #111827;
+      line-height: 1.6;
+      font-size: 18px;
+    }
+
+    /* Header */
+    header {
+      background: #fff;
+      padding: 1.2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header .logo {
+      display: flex;
+      align-items: center;
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: #059669;
+      letter-spacing: 1px;
+    }
+
+    header .logo span {
+      margin-left: 0.4rem;
+      font-size: 1.5rem;
+      color: #2563eb;
+      text-transform: capitalize;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 2.5rem;
+      font-size: 1.2rem;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #374151;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      color: #059669;
+      border-bottom: 2px solid #059669;
+      padding-bottom: 0.2rem;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(to right, #059669, #2563eb);
+      color: white;
+      text-align: center;
+      padding: 6rem 2rem;
+    }
+
+    .hero h1 {
+      font-size: 3.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      max-width: 800px;
+      margin: 0 auto 2.5rem;
+      font-size: 1.6rem;
+      line-height: 1.8;
+    }
+
+    .hero .btn {
+      padding: 1rem 2rem;
+      margin: 0.7rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.4rem;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .btn-primary {
+      background: white;
+      color: #059669;
+      border: 2px solid #059669;
+    }
+
+    .btn-primary:hover {
+      background: #059669;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+    }
+
+    .btn-secondary:hover {
+      background: white;
+      color: #2563eb;
+    }
+
+    /* Features Section */
+    .features {
+      text-align: center;
+      padding: 5rem 2rem;
+    }
+
+    .features h2 {
+      font-size: 3rem;
+      margin-bottom: 2.5rem;
+      color: #111827;
+    }
+
+    .feature-cards {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      flex: 1 1 280px;
+      max-width: 400px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      text-align: left;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    }
+
+    .card h3 {
+      margin-bottom: 1rem;
+      color: #059669;
+      font-size: 2rem;
+    }
+
+    .card p {
+      margin-bottom: 1rem;
+      color: #374151;
+      font-size: 1.2rem;
+      line-height: 1.7;
+    }
+
+    /* Stats Section */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      padding: 4rem 2rem;
+      background: #f3f4f6;
+      flex-wrap: wrap;
+      text-align: center;
+    }
+
+    .stat {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      min-width: 220px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .stat:hover {
+      transform: scale(1.05);
+    }
+
+    .stat h3 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: #2563eb;
+      font-weight: 700;
+    }
+
+    .stat p {
+      color: #6b7280;
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      background: #fff;
+      font-size: 1rem;
+      color: #6b7280;
+      border-top: 1px solid #e5e7eb;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">🌼 <span>Flower Identification</span></div>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('home_page') }}" class="active">Home</a></li>
+        <li><a href="{{ url_for('index_page') }}">Identify Flower</a></li>
+        <li><a href="{{ url_for('dataset_page') }}">Dataset</a></li>
+        <li><a href="{{ url_for('model_page') }}">Model</a></li>
+        <li><a href="{{ url_for('about_page') }}">About Flowers</a></li>
+        <li><a href="{{ url_for('results_page') }}">Results</a></li>
+        <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Flower Identification Using CNN 🌸</h1>
+    <p>Advanced machine learning powered flower identification system. Upload any flower image and get instant AI-powered species recognition.</p>
+    <a href="{{ url_for('index_page') }}"><button class="btn btn-primary">🌼 Identify Flower</button></a>
+    <a href="{{ url_for('model_page') }}"><button class="btn btn-secondary">🤖 Learn About AI Model</button></a>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <h2>Cutting-Edge Flower Recognition</h2>
+    <div class="feature-cards">
+      <div class="card">
+        <h3>📂 Rich Dataset</h3>
+        <p>4,242 images across 5 flower categories: Daisy, Dandelion, Rose, Sunflower, and Tulip.</p>
+      </div>
+      <div class="card">
+        <h3>🧠 Deep CNN Model</h3>
+        <p>Advanced Convolutional Neural Network with multiple layers and dropout regularization.</p>
+      </div>
+      <div class="card">
+        <h3>⚡ Instant Recognition</h3>
+        <p>Upload any flower image and get instant species identification with confidence scores.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats">
+    <div class="stat">
+      <h3>94.5%</h3>
+      <p>Model Accuracy</p>
+    </div>
+    <div class="stat">
+      <h3>4,242</h3>
+      <p>Training Images</p>
+    </div>
+    <div class="stat">
+      <h3>5</h3>
+      <p>Flower Categories</p>
+    </div>
+    <div class="stat">
+      <h3>0.2s</h3>
+      <p>Prediction Time</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+     🌸 FlowerAI Recognition Using CNN Model 
+  </footer>
+
+</body>
+</html>

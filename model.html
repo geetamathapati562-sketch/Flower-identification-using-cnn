@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CNN Model Architecture — FlowerAI</title>
+  <style>
+    :root{
+      --bg1: #f3fff9;
+      --bg2: #f0f8ff;
+      --card-bg: #ffffff;
+      --muted: #6b7280;
+      --accent-green: #16a34a;
+      --accent-blue: #2563eb;
+      --accent-purple: #7c3aed;
+      --soft-shadow: 0 8px 24px rgba(11,19,31,0.06);
+      --radius: 14px;
+      --gap: 28px;
+      --container-w: 1200px;
+      --ui-padding: 28px;
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    body{
+      background: linear-gradient(90deg, #f0fff6 0%, #f2faff 100%);
+      color:#111827;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding-bottom:60px;
+    }
+
+    /* Topbar Navigation */
+    .topbar {
+      background: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .topbar .brand {
+      display: flex;
+      align-items: center;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #059669;
+    }
+    .topbar .brand span {
+      margin-left: 0.5rem;
+    }
+    .topbar-nav ul {
+      display: flex;
+      list-style: none;
+      gap: 2.5rem;
+      margin: 0;
+      padding: 0;
+      font-size: 1.05rem;
+    }
+    .topbar-nav ul li a {
+      text-decoration: none;
+      color: #374151;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+    .topbar-nav ul li a:hover,
+    .topbar-nav ul li a.active {
+      color: #059669;
+    }
+
+    /* Hero Section */
+    .hero{
+      max-width: var(--container-w);
+      margin: 48px auto 28px;
+      text-align:center;
+      padding: 6px 20px 28px;
+    }
+    .hero .icon{
+      width:90px;
+      height:90px;
+      display:inline-grid;
+      place-items:center;
+      border-radius:50%;
+      background: linear-gradient(180deg, rgba(124,58,237,0.08), rgba(124,58,237,0.02));
+      margin-bottom:16px;
+    }
+    .hero h1{
+      margin:0;
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing:-0.02em;
+    }
+    .hero p{
+      margin:16px auto 0;
+      color:var(--muted);
+      max-width:850px;
+      line-height:1.6;
+      font-size: 1.25rem;
+    }
+
+    /* Two-column top area */
+    .top-grid{
+      max-width: var(--container-w);
+      margin: 28px auto;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap);
+      padding: 0 20px;
+    }
+    .card{
+      background:var(--card-bg);
+      border-radius: var(--radius);
+      padding: var(--ui-padding);
+      box-shadow: var(--soft-shadow);
+      overflow: hidden;
+    }
+
+    /* Model specifications list (left) */
+    .specs h3{ margin: 0 0 20px 0; font-size:1.8rem; }
+    .spec-list{ list-style:none; padding:0; margin:0; display:grid; gap:14px; }
+    .spec-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:14px;
+      border-radius:10px;
+      background: linear-gradient(180deg, rgba(15,23,42,0.02), rgba(15,23,42,0.01));
+    }
+    .spec-label{ color:#374151; font-size:1.05rem; font-weight:500; }
+    .spec-value{
+      font-weight:700;
+      font-size:1.15rem;
+      padding:6px 12px;
+      border-radius:999px;
+      background: rgba(0,0,0,0.03);
+    }
+    .pill-purple{ background: rgba(124,58,237,0.08); color: #6b21a8; }
+    .pill-blue  { background: rgba(37,99,235,0.08); color: #1e40af; }
+    .pill-green { background: rgba(16,163,74,0.08); color: #166534; }
+    .pill-orange{ background: rgba(245,158,11,0.08); color: #b45309; }
+    .pill-red   { background: rgba(239,68,68,0.06); color: #b91c1c; }
+
+    /* Performance metrics (right) */
+    .metrics h3{ margin:0 0 20px 0; font-size:1.8rem; }
+    .metric{ margin-bottom:20px; }
+    .metric .meta{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:6px;
+      color:var(--muted);
+      font-size:1rem;
+    }
+    .progress{
+      width:100%;
+      height:12px;
+      background:#f3f4f6;
+      border-radius:999px;
+      overflow:hidden;
+    }
+    .progress-bar{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      transition: width 1200ms cubic-bezier(.2,.9,.2,1);
+    }
+    .bar-green{ background: linear-gradient(90deg,#16a34a,#10b981); }
+    .bar-blue { background: linear-gradient(90deg,#2563eb,#3b82f6); }
+    .bar-purple{ background: linear-gradient(90deg,#7c3aed,#a78bfa); }
+    .metric .percent{ font-weight:700; color:#111827; font-size:1rem; }
+
+    /* Feature cards */
+    .features{
+      max-width: var(--container-w);
+      margin: 40px auto;
+      display:grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 32px;
+      padding: 0 20px;
+    }
+    .feature-card{
+      padding:24px;
+      border-radius:12px;
+      background: linear-gradient(180deg, rgba(15,23,42,0.02), rgba(15,23,42,0.01));
+      box-shadow: var(--soft-shadow);
+      min-height:140px;
+    }
+    .feature-head{ display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+    .feature-icon{ width:50px; height:50px; display:grid; place-items:center; border-radius:10px; font-size:1.8rem; }
+    .feature-title{ font-weight:700; margin:0; font-size:1.3rem; }
+    .feature-desc{ color:var(--muted); font-size:1rem; line-height:1.5; margin:0; }
+
+    .fe-blue .feature-icon{ background: linear-gradient(180deg,#eff6ff,#ecfeff); color:#1e40af; }
+    .fe-green .feature-icon{ background: linear-gradient(180deg,#ecfdf5,#f0fdf4); color:#0f766e; }
+    .fe-purple .feature-icon{ background: linear-gradient(180deg,#faf5ff,#fff7ff); color:#7c3aed; }
+
+    /* Info cards */
+    .info-grid{
+      max-width: var(--container-w);
+      margin: 40px auto;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap);
+      padding: 0 20px;
+    }
+    .info-card{
+      padding:22px;
+      border-radius:12px;
+      background:var(--card-bg);
+      box-shadow: var(--soft-shadow);
+    }
+    .info-card h4{ margin:0 0 12px 0; font-size:1.5rem; }
+    .info-card p{ margin:0; color:var(--muted); line-height:1.6; font-size:1.05rem; }
+
+    /* Training Configuration */
+    .training{
+      max-width: var(--container-w);
+      margin: 40px auto;
+      padding: 0 20px;
+      font-size: 1rem;
+    }
+    .training .big-card{
+      padding: 26px;
+      border-radius: 12px;
+      background: var(--card-bg);
+      box-shadow: var(--soft-shadow);
+    }
+    .training-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+    .opt-details dt{ color:#374151; font-weight:600; margin-bottom:6px; font-size:1rem; }
+    .opt-details dd{ margin:0 0 12px 0; color:var(--muted); font-size:0.95rem; }
+    .augment-list{list-style:none;margin:0;padding:0;}
+    .augment-list li{ margin-bottom:10px; color:var(--muted); display:flex; gap:10px; align-items:flex-start; font-size:0.95rem; }
+    .dot{width:8px;height:8px;background:#10b981;border-radius:50%;margin-top:6px;flex:0 0 8px;}
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .top-grid{ grid-template-columns: 1fr; padding: 0 14px; }
+      .features{ grid-template-columns: 1fr; padding: 0 14px; }
+      .info-grid{ grid-template-columns: 1fr; padding: 0 14px; }
+      .training-grid{ grid-template-columns: 1fr; }
+      .hero h1{ font-size:2rem; }
+      .hero p{ font-size:1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="brand">🌼 <span>Flower Identification</span></div>
+    <nav class="topbar-nav">
+      <ul>
+        <li><a href="{{ url_for('home_page') }}" class="active">Home</a></li>
+        <li><a href="{{ url_for('index_page') }}">Identify Flower</a></li>
+        <li><a href="{{ url_for('dataset_page') }}">Dataset</a></li>
+        <li><a href="{{ url_for('model_page') }}">Model</a></li>
+        <li><a href="{{ url_for('about_page') }}">About Flowers</a></li>
+        <li><a href="{{ url_for('results_page') }}">Results</a></li>
+        <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Hero -->
+  <header class="hero" role="banner">
+    <div class="icon" aria-hidden="true">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M12 3C9.243 3 7 5.243 7 8v1H6a2 2 0 00-2 2v1h16v-1a2 2 0 00-2-2h-1V8c0-2.757-2.243-5-5-5z" fill="#8b5cf6" opacity=".95"/><path d="M5 13v5a3 3 0 003 3h8a3 3 0 003-3v-5H5z" fill="#a78bfa" opacity=".85"/></svg>
+    </div>
+    <h1>CNN Model Architecture</h1>
+    <p>Our deep learning model uses a Convolutional Neural Network (CNN) architecture optimized for flower classification with multiple layers and regularization techniques to improve generalization.</p>
+  </header>
+
+  <!-- Top grid -->
+  <main>
+    <section class="top-grid">
+      <!-- Specs -->
+      <div class="card specs">
+        <h3>Model Specifications</h3>
+        <ul class="spec-list">
+          <li class="spec-item"><div class="spec-label">Architecture Type</div><div class="spec-value pill-purple">Convolutional Neural Network</div></li>
+          <li class="spec-item"><div class="spec-label">Total Parameters</div><div class="spec-value pill-blue">2,847,493</div></li>
+          <li class="spec-item"><div class="spec-label">Trainable Parameters</div><div class="spec-value pill-green">2,847,493</div></li>
+          <li class="spec-item"><div class="spec-label">Model Size</div><div class="spec-value pill-orange">11.2 MB</div></li>
+          <li class="spec-item"><div class="spec-label">Training Time</div><div class="spec-value pill-red">2.5 hours</div></li>
+        </ul>
+      </div>
+
+      <!-- Metrics -->
+      <div class="card metrics">
+        <h3>Performance Metrics</h3>
+        <div class="metric">
+          <div class="meta"><span for-training>Training Accuracy</span><span class="percent" id="p1-value">96%</span></div>
+          <div class="progress"><div class="progress-bar bar-green" data-perc="96.8" id="p1"></div></div>
+        </div>
+        <div class="metric">
+          <div class="meta"><span for-validation>Validation Accuracy</span><span class="percent" id="p2-value">92%</span></div>
+          <div class="progress"><div class="progress-bar bar-blue" data-perc="94.5" id="p2"></div></div>
+        </div>
+        <div class="metric">
+          <div class="meta"><span for-test>Test Accuracy</span><span class="percent" id="p3-value">91%</span></div>
+          <div class="progress"><div class="progress-bar bar-purple" data-perc="93.2" id="p3"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+      <div class="feature-card fe-blue">
+        <div class="feature-head"><div class="feature-icon">🧩</div><div class="feature-title">Convolution Layers</div></div>
+        <p class="feature-desc">Multiple 2D convolutional layers extract hierarchical features from flower images, starting with edges and progressing to complex patterns.</p>
+      </div>
+      <div class="feature-card fe-green">
+        <div class="feature-head"><div class="feature-icon">⚡</div><div class="feature-title">Activation & Pooling</div></div>
+        <p class="feature-desc">ReLU introduces non-linearity; max pooling reduces spatial dimensions and computational complexity while keeping salient features.</p>
+      </div>
+      <div class="feature-card fe-purple">
+        <div class="feature-head"><div class="feature-icon">🎯</div><div class="feature-title">Regularization</div></div>
+        <p class="feature-desc">Dropout prevents overfitting; global average pooling reduces parameters and improves generalization across flower types.</p>
+      </div>
+    </section>
+
+    <!-- Info cards -->
+    <section class="info-grid">
+      <div class="info-card">
+        <h4>What is a Convolutional Neural Network (CNN)?</h4>
+        <p>A CNN is a type of deep neural network especially effective for images. It uses convolutional layers to learn spatial hierarchies of features (edges → textures → shapes). CNNs automatically learn useful features from raw pixel data, reducing the need for manual feature engineering.</p>
+      </div>
+      <div class="info-card">
+        <h4>Using CNN for Flower Identification — Step by step</h4>
+        <p>
+          1. <strong>Collect & Clean Data:</strong> Gather labeled flower images.<br>
+          2. <strong>Preprocess:</strong> Resize, normalize, augment images.<br>
+          3. <strong>Design / Choose Model:</strong> Build CNN or use transfer learning.<br>
+          4. <strong>Train:</strong> Use optimizer, monitor validation accuracy.<br>
+          5. <strong>Evaluate & Deploy:</strong> Export model and integrate for real-time identification.
+        </p>
+      </div>
+    </section>
+
+    <!-- Training -->
+    <section class="training">
+      <div class="big-card card">
+        <h3>Training Configuration</h3>
+        <div class="training-grid">
+          <div>
+            <h4>Optimization Details</h4>
+            <dl class="opt-details">
+              <dt>Optimizer:</dt><dd>Adam</dd>
+              <dt>Learning Rate:</dt><dd>0.001</dd>
+              <dt>Loss Function:</dt><dd>Categorical Crossentropy</dd>
+              <dt>Batch Size:</dt><dd>32</dd>
+              <dt>Epochs:</dt><dd>50</dd>
+            </dl>
+          </div>
+          <div>
+            <h4>Data Augmentation</h4>
+            <ul class="augment-list">
+              <li><span class="dot"></span> Random rotation (±15°)</li>
+              <li><span class="dot"></span> Width/height shift (±0.1)</li>
+              <li><span class="dot"></span> Zoom range (±0.1)</li>
+              <li><span class="dot"></span> Horizontal flip</li>
+              <li><span class="dot"></span> Fill mode: nearest</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      function animateBar(el, labelEl) {
+        const target = parseFloat(el.dataset.perc) || 0;
+        let cur = 0;
+        const duration = 1200;
+        const start = performance.now();
+        const step = (ts) => {
+          const elapsed = ts - start;
+          const t = Math.min(1, elapsed / duration);
+          const eased = (--t)*t*t+1;
+          const value = Math.round(target * eased * 10)/10;
+          el.style.width = value + '%';
+          if(labelEl) labelEl.textContent = value.toFixed(1).replace(/\.0$/, '') + '%';
+          if(elapsed < duration) requestAnimationFrame(step);
+          else {
+            el.style.width = target + '%';
+            if(labelEl) labelEl.textContent = target.toFixed(1).replace(/\.0$/, '') + '%';
+          }
+        };
+        requestAnimationFrame(step);
+      }
+
+      const metrics = [
+        {label: document.querySelector('[for-training]'), bar: document.getElementById('p1'), percent: document.getElementById('p1-value')},
+        {label: document.querySelector('[for-validation]'), bar: document.getElementById('p2'), percent: document.getElementById('p2-value')},
+        {label: document.querySelector('[for-test]'), bar: document.getElementById('p3'), percent: document.getElementById('p3-value')}
+      ];
+
+      metrics.forEach(m => {
+        if(m.label){
+          m.label.style.cursor = "pointer";
+          m.label.addEventListener('click', () => animateBar(m.bar, m.percent));
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
