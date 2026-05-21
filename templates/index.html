@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Flower Identification</title>
+  <style>
+    /* Reset some default styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #059669, #2563eb);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Navbar styling */
+    nav {
+      width: 100%;
+      background-color: white;
+      padding: 1.2rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav .logo {
+      display: flex;
+      align-items: center;
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: #059669;
+    }
+
+    nav .logo span {
+      margin-left: 0.4rem;
+      font-size: 1.6rem;
+      color: #2563eb;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2.5rem;
+      font-size: 1.2rem;
+    }
+
+    nav ul li a {
+      color: #374151;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease, border-bottom 0.3s ease;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      color: #059669;
+      border-bottom: 2px solid #059669;
+      padding-bottom: 0.2rem;
+    }
+
+    /* Main container */
+    main.container {
+      max-width: 900px;
+      width: 100%;
+      margin-top: 3rem;
+      padding: 1.5rem;
+    }
+
+    header h1 {
+      font-size: 3.2rem;
+      color: #ffffff;
+      margin-bottom: 0.8rem;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #f3f4f6;
+      font-size: 1.6rem;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Card styling */
+    .card {
+      background-color: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 2.5rem;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+    }
+
+    /* Upload preview */
+    .upload-card .preview {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    #preview-img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* File input styling */
+    .file-label {
+      display: inline-block;
+      background-color: #2563eb;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: background 0.3s;
+    }
+
+    .file-label:hover {
+      background-color: #1d4ed8;
+    }
+
+    .file-label input {
+      display: none;
+    }
+
+    /* Buttons */
+    .actions {
+      text-align: center;
+    }
+
+    .btn {
+      padding: 0.8rem 2rem;
+      background-color: #e67e22;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+    }
+
+    .btn:disabled {
+      background-color: #bdc3c7;
+      cursor: not-allowed;
+    }
+
+    .btn:hover:not(:disabled) {
+      background-color: #d35400;
+    }
+
+    /* Results */
+    .result {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .result h3 {
+      color: #059669;
+      margin-bottom: 0.5rem;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .result p {
+      font-size: 1.3rem;
+      color: #374151;
+      margin: 0.3rem 0;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 2.5rem;
+      text-align: center;
+      color: #f3f4f6;
+      font-size: 1rem;
+      padding: 1rem;
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">🌼 <span>Flower Identification</span></div>
+    <ul>
+      <li><a href="{{ url_for('home_page') }}">Home</a></li>
+      <li><a href="{{ url_for('index_page') }}" class="active">Identify Flower</a></li>
+      <li><a href="{{ url_for('model_page') }}">Model</a></li>
+      <li><a href="{{ url_for('dataset_page') }}">Dataset</a></li>
+      <li><a href="{{ url_for('about_page') }}">About Flowers</a></li>
+      <li><a href="{{ url_for('results_page') }}">Results</a></li>
+      <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <header>
+      <h1>🌸 Flower Identifier</h1>
+      <p class="subtitle">Upload a photo and let our AI-powered CNN identify your flower instantly.</p>
+    </header>
+
+    <section class="card upload-card">
+      <div class="preview">
+        <img id="preview-img" src="" alt="preview" hidden>
+      </div>
+
+      <form id="upload-form">
+        <label class="file-label">
+          <input type="file" id="image-input" accept="image/*">
+          📂 Choose an Image
+        </label>
+
+        <div class="actions">
+          <button type="button" id="predict-btn" class="btn" disabled>🔍 Predict</button>
+        </div>
+      </form>
+
+      <div id="result" class="result" hidden>
+        <h3>🌼 Prediction Result</h3>
+        <p id="pred-label"></p>
+        <p id="pred-confidence"></p>
+      </div>
+    </section>
+
+    <footer>
+      🌸 FlowerAI Recognition using CNN Model
+    </footer>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

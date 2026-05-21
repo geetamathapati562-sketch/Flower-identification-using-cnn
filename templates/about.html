@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>About Flowers 🌸</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #fafafa;
+      color: #333;
+    }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+    h1, h2, h3 {
+      margin: 0 0 10px 0;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
+    .header p {
+      font-size: 1.2rem;
+      color: #666;
+      max-width: 700px;
+      margin: 10px auto 0 auto;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 20px;
+    }
+    .flower-list, .flower-details {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .flower-list button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      text-align: left;
+      border-radius: 8px;
+      border: 2px solid transparent;
+      background: #f9f9f9;
+      cursor: pointer;
+    }
+    .flower-list button.active {
+      background: linear-gradient(to right, #fde2e4, #e0c3fc);
+      border-color: #f48fb1;
+    }
+    .flower-list button:hover {
+      background: #eee;
+    }
+    .flower-details .hero {
+      position: relative;
+      height: 250px;
+      overflow: hidden;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .flower-details .hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: brightness(70%);
+    }
+    .flower-details .hero-text {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      color: #fff;
+    }
+    .flower-details h3 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    .card {
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+    .blue-card {
+      background: linear-gradient(to bottom right, #e3f2fd, #bbdefb);
+    }
+    .green-card {
+      background: linear-gradient(to bottom right, #e8f5e9, #c8e6c9);
+    }
+    .colors span {
+      display: inline-block;
+      background: #f3e5f5;
+      color: #6a1b9a;
+      padding: 5px 10px;
+      border-radius: 20px;
+      margin: 5px 5px 0 0;
+      font-size: 0.9rem;
+    }
+    .uses {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .use-item {
+      display: flex;
+      align-items: center;
+      background: linear-gradient(to right, #fff3e0, #ffe0b2);
+      padding: 8px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+    .use-item div {
+      width: 8px;
+      height: 8px;
+      background: orange;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+    .fun-facts {
+      margin-top: 40px;
+      background: linear-gradient(to right, #fce4ec, #ede7f6);
+      padding: 20px;
+      border-radius: 12px;
+    }
+    .fun-facts h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .facts-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+    .fact {
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    .fact div:first-child {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    /* Header */
+    header {
+      background: #fff;
+      padding: 1.2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header .logo {
+      display: flex;
+      align-items: center;
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: #059669;
+      letter-spacing: 1px;
+    }
+
+    header .logo span {
+      margin-left: 0.4rem;
+      font-size: 1.5rem;
+      color: #2563eb;
+      text-transform: capitalize;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 2.5rem;
+      font-size: 1.2rem;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #374151;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      color: #059669;
+      border-bottom: 2px solid #059669;
+      padding-bottom: 0.2rem;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">🌼 <span>Flower Identification</span></div>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('home_page') }}" class="active">Home</a></li>
+        <li><a href="{{ url_for('index_page') }}">Identify Flower</a></li>
+        <li><a href="{{ url_for('dataset_page') }}">Dataset</a></li>
+        <li><a href="{{ url_for('model_page') }}">Model</a></li>
+        <li><a href="{{ url_for('about_page') }}">About Flowers</a></li>
+        <li><a href="{{ url_for('results_page') }}">Results</a></li>
+        <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+<div class="container">
+  <div class="header">
+    <h1>About Flowers 🌸</h1>
+    <p>Explore detailed information about each flower category. Learn about their characteristics, uses, and fascinating botanical details.</p>
+  </div>
+
+  <div class="grid">
+    <!-- Flower List -->
+    <div class="flower-list" id="flowerList"></div>
+
+    <!-- Flower Details -->
+    <div class="flower-details" id="flowerDetails"></div>
+  </div>
+
+  <!-- Fun Facts -->
+  <div class="fun-facts" id="funFacts"></div>
+</div>
+
+<script>
+  const flowerData = {
+    "Daisy": {
+      scientificName: "Bellis perennis",
+      description: "Daisies are cheerful flowers with white petals and a yellow center, symbolizing innocence and purity.",
+      nativeRegion: "Europe and temperate regions",
+      bloomingSeason: "Spring to autumn",
+      colors: ["White", "Pink", "Yellow"],
+      uses: ["Ornamental", "Herbal tea"],
+      imageCount: 120,
+      karnatakaRegion: "Coorg, Chikmagalur",
+      soilType: "Loamy soil",
+      petals: "15–30 narrow petals",
+      leaves: "Rosette-shaped leaves near base"
+    },
+    "Dandelion": {
+      scientificName: "Taraxacum officinale",
+      description: "Dandelions are bright yellow flowers known for their puffball seed heads that children love to blow.",
+      nativeRegion: "Eurasia",
+      bloomingSeason: "Spring and summer",
+      colors: ["Yellow"],
+      uses: ["Salads", "Herbal remedies"],
+      imageCount: 90,
+      karnatakaRegion: "Mysuru plains",
+      soilType: "Sandy-loam",
+      petals: "Ray florets forming a puffball",
+      leaves: "Long jagged leaves in a basal rosette"
+    },
+    "Rose": {
+      scientificName: "Rosa spp.",
+      description: "Roses are iconic flowers symbolizing love and beauty, available in countless colors and varieties.",
+      nativeRegion: "Worldwide",
+      bloomingSeason: "Spring to fall",
+      colors: ["Red", "White", "Pink", "Yellow"],
+      uses: ["Perfume", "Decorative", "Symbolic"],
+      imageCount: 200,
+      karnatakaRegion: "Bengaluru, Kolar, Chikkaballapur",
+      soilType: "Well-drained loamy soil",
+      petals: "5–100 petals depending on variety",
+      leaves: "Compound leaves with serrated edges"
+    },
+    "Sunflower": {
+      scientificName: "Helianthus annuus",
+      description: "Sunflowers are tall, bright yellow flowers that track the sun’s movement, symbolizing positivity and strength.",
+      nativeRegion: "North America",
+      bloomingSeason: "Summer to early fall",
+      colors: ["Yellow", "Orange"],
+      uses: ["Oil production", "Seeds", "Decorative"],
+      imageCount: 150,
+      karnatakaRegion: "Dharwad, Bellary, Raichur",
+      soilType: "Black soil",
+      petals: "Bright yellow ray florets",
+      leaves: "Large, coarse, heart-shaped leaves"
+    },
+    "Tulip": {
+      scientificName: "Tulipa gesneriana",
+      description: "Tulips are vibrant spring flowers popular in gardens and floral arrangements.",
+      nativeRegion: "Central Asia and Turkey",
+      bloomingSeason: "Spring",
+      colors: ["Red", "Yellow", "Purple", "Pink", "White"],
+      uses: ["Gardens", "Cut flowers"],
+      imageCount: 130,
+      karnatakaRegion: "Cooler regions of Coorg",
+      soilType: "Sandy loam",
+      petals: "6 smooth petals",
+      leaves: "Long, strap-shaped leaves"
+    },
+    "Lotus": {
+      scientificName: "Nelumbo nucifera",
+      description: "The Lotus is a sacred flower in many cultures, symbolizing purity, enlightenment, and rebirth.",
+      nativeRegion: "Asia",
+      bloomingSeason: "Summer",
+      colors: ["Pink", "White"],
+      uses: ["Religious rituals", "Medicinal"],
+      imageCount: 10,
+      karnatakaRegion: "Wetlands of Mandya and Mysuru",
+      soilType: "Clay soil in ponds",
+      petals: "15–30 large petals",
+      leaves: "Large circular floating leaves"
+    },
+    "Lily": {
+      scientificName: "Lilium candidum",
+      description: "Lilies are elegant flowers with large, trumpet-shaped blooms, often associated with purity and renewal.",
+      nativeRegion: "Northern Hemisphere",
+      bloomingSeason: "Summer",
+      colors: ["White", "Orange", "Pink", "Yellow"],
+      uses: ["Ornamental", "Perfume"],
+      imageCount: 10,
+      karnatakaRegion: "Ooty border regions near Chamarajanagar",
+      soilType: "Sandy-loam rich in organic matter",
+      petals: "6 broad petals",
+      leaves: "Narrow lance-shaped leaves"
+    },
+    "Jasmine": {
+      scientificName: "Jasminum sambac",
+      description: "Jasmine is known for its sweet fragrance and delicate white or yellow flowers.",
+      nativeRegion: "Tropical and warm temperate regions",
+      bloomingSeason: "Summer",
+      colors: ["White", "Yellow"],
+      uses: ["Perfume", "Tea", "Ornamental"],
+      imageCount: 12,
+      karnatakaRegion: "Udupi, Mangalore (famous for Mallige)",
+      soilType: "Sandy-loam",
+      petals: "5–9 small petals",
+      leaves: "Opposite, simple or pinnate leaves"
+    },
+    "Hibiscus": {
+      scientificName: "Hibiscus rosa-sinensis",
+      description: "Hibiscus flowers are large and colorful, often used in herbal teas and traditional medicine.",
+      nativeRegion: "Asia and Pacific islands",
+      bloomingSeason: "Year-round in warm climates",
+      colors: ["Red", "Pink", "Yellow", "White"],
+      uses: ["Tea", "Medicinal", "Ornamental"],
+      imageCount: 12,
+      karnatakaRegion: "Bengaluru rural, Tumkur",
+      soilType: "Well-drained loamy soil",
+      petals: "5–7 large petals",
+      leaves: "Glossy serrated green leaves"
+    },
+    "Marigold": {
+      scientificName: "Tagetes erecta",
+      description: "Marigolds are bright and hardy flowers commonly used in decorations and festivals.",
+      nativeRegion: "Mexico and Central America",
+      bloomingSeason: "Summer to autumn",
+      colors: ["Orange", "Yellow", "Red"],
+      uses: ["Decorative", "Medicinal", "Festivals"],
+      imageCount: 10,
+      karnatakaRegion: "Kolar, Chikkaballapur, Hassan",
+      soilType: "Alluvial and sandy soil",
+      petals: "Multiple layered petals",
+      scientificName: "Tagetes erecta",
+      leaves: "Pinnate, deeply divided leaves"
+    }
+  };
+
+  const flowerImages = {
+    Daisy: "{{ url_for('static', filename='images/Daisy.jpg') }}",
+    Dandelion: "{{ url_for('static', filename='images/deadlion.jpg') }}",
+    Rose: "{{ url_for('static', filename='images/Rose.jpg') }}",
+    Sunflower: "{{ url_for('static', filename='images/Sunflower.jpg') }}",
+    Tulip: "{{ url_for('static', filename='images/Tulip.jpg') }}",
+    Lotus: "{{ url_for('static', filename='images/Lotus.jpg') }}",
+    Lily: "{{ url_for('static', filename='images/Lily.jpg') }}",
+    Jasmine: "{{ url_for('static', filename='images/Jasmine.jpg') }}",
+    Hibiscus: "{{ url_for('static', filename='images/Hibiscus.jpg') }}",
+    Marigold: "{{ url_for('static', filename='images/Marigold.jpg') }}"
+  };
+
+  let selectedFlower = "Daisy";
+
+  function renderFlowerList() {
+    const listDiv = document.getElementById("flowerList");
+    listDiv.innerHTML = "";
+    for (const name in flowerData) {
+      const btn = document.createElement("button");
+      btn.innerHTML = `
+        <div><strong>${name}</strong></div>
+        <div><em>${flowerData[name].scientificName}</em></div>
+        <div style="font-size:0.8rem;color:#555;">${flowerData[name].imageCount} images in dataset</div>
+      `;
+      if (name === selectedFlower) btn.classList.add("active");
+      btn.onclick = () => {
+        selectedFlower = name;
+        renderFlowerList();
+        renderFlowerDetails();
+        renderFunFacts();
+      };
+      listDiv.appendChild(btn);
+    }
+  }
+
+  function renderFlowerDetails() {
+    const data = flowerData[selectedFlower];
+    const detailsDiv = document.getElementById("flowerDetails");
+    detailsDiv.innerHTML = `
+      <div class="hero">
+        <img src="${flowerImages[selectedFlower]}" alt="${selectedFlower}">
+        <div class="hero-text">
+          <h2>${selectedFlower}</h2>
+          <p><em>${data.scientificName}</em></p>
+        </div>
+      </div>
+      <h3>Description</h3>
+      <p>${data.description}</p>
+      <p><strong>Scientific Name:</strong> ${data.scientificName}</p>
+      <div class="card blue-card"><strong>Native Region:</strong> ${data.nativeRegion}</div>
+      <div class="card green-card"><strong>Blooming Season:</strong> ${data.bloomingSeason}</div>
+      <div class="card"><strong>Karnataka Region:</strong> ${data.karnatakaRegion}</div>
+      <div class="card"><strong>Soil Type:</strong> ${data.soilType}</div>
+      <div class="card"><strong>Petals:</strong> ${data.petals}</div>
+      <div class="card"><strong>Leaves:</strong> ${data.leaves}</div>
+      <h3>Common Colors</h3>
+      <div class="colors">${data.colors.map(c => `<span>${c}</span>`).join("")}</div>
+      <h3>Common Uses</h3>
+      <div class="uses">${data.uses.map(u => `<div class="use-item"><div></div>${u}</div>`).join("")}</div>
+    `;
+  }
+
+  function renderFunFacts() {
+    const data = flowerData[selectedFlower];
+    const factsDiv = document.getElementById("funFacts");
+    factsDiv.innerHTML = `
+      <h2>Interesting Facts About ${selectedFlower}s</h2>
+      <div class="facts-grid">
+        <div class="fact"><div style="color:#ec407a;">${data.imageCount}</div><div>Images in our dataset</div></div>
+        <div class="fact"><div style="color:#8e24aa;">${data.colors.length}</div><div>Different color varieties</div></div>
+        <div class="fact"><div style="color:#1e88e5;">${data.uses.length}</div><div>Known uses</div></div>
+      </div>
+    `;
+  }
+
+  renderFlowerList();
+  renderFlowerDetails();
+  renderFunFacts();
+</script>
+</body>
+</html>

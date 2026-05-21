@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flowers Recognition Dataset</title>
+  <style>
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    background: linear-gradient(90deg, #f0fff6 0%, #f2faff 100%);
+    color: #1f2937;
+    line-height: 1.6;
+  }
+
+  /* Wrapper for content alignment */
+  .main-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* Navigation bar */
+  header {
+    background: #ffffff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  header .logo {
+    display: flex;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #059669;
+  }
+
+  header .logo span {
+    margin-left: 0.4rem;
+  }
+
+  nav ul {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+    font-size: 1.05rem;
+  }
+
+  nav ul li a {
+    text-decoration: none;
+    color: #374151;
+    font-weight: 500;
+    transition: 0.3s;
+  }
+
+  nav ul li a:hover,
+  nav ul li a.active {
+    color: #059669;
+  }
+
+  /* Page title */
+  .nxt {
+    text-align: center;
+    padding: 50px 20px 25px;
+  }
+
+  .nxt h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #111827;
+  }
+
+  .nxt p {
+    font-size: 1.1rem;
+    color: #4b5563;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  /* Dataset overview cards */
+  .dataset-overview {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 25px;
+    margin: 40px 0;
+  }
+
+  .card {
+    flex: 1 1 220px;
+    padding: 20px;
+    text-align: center;
+    border-radius: 14px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    background: #f3f4f6;
+  }
+
+  .card h2 {
+    margin: 10px 0;
+    font-size: 1.4rem;
+    color: #111827;
+  }
+
+  .card p {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #059669;
+  }
+
+  /* Categories */
+  .categories {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 25px;
+    margin: 50px 0;
+  }
+
+  .category {
+    flex: 1 1 250px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    padding: 18px;
+    text-align: center;
+  }
+
+  .category h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #111827;
+  }
+
+  .category small {
+    display: block;
+    color: #6b7280;
+    font-style: italic;
+    font-size: 0.95rem;
+  }
+
+  .category span {
+    display: block;
+    margin-top: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    color: #059669;
+  }
+
+  /* Dataset statistics */
+  .stats {
+    margin: 50px 0;
+    padding: 25px;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+  }
+
+  .stats h2 {
+    margin-top: 0;
+    font-size: 1.6rem;
+    color: #111827;
+  }
+
+  .stats p {
+    margin: 8px 0;
+    font-size: 1rem;
+    color: #374151;
+  }
+
+  /* Sample images */
+  .sample-images {
+    margin: 50px 0;
+    text-align: center;
+  }
+
+  .sample-images h2 {
+    margin-bottom: 25px;
+    font-size: 1.7rem;
+    color: #111827;
+  }
+
+  .image-grid {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .image-card {
+    width: 200px;
+    text-align: center;
+  }
+
+  .image-card img {
+    width: 100%;
+    border-radius: 12px;
+    height: 140px;
+    object-fit: cover;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    transition: transform 0.3s ease;
+  }
+
+  .image-card img:hover {
+    transform: scale(1.05);
+  }
+
+  .image-card p {
+    margin: 6px 0;
+    font-size: 0.95rem;
+    color: #374151;
+  }
+
+  /* Data preparation */
+  .prep {
+    margin: 50px 0 70px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  .prep-card {
+    flex: 1 1 250px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+  }
+
+  .prep-card h3 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    color: #111827;
+  }
+
+  .prep-card p {
+    font-size: 0.95rem;
+    color: #374151;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 1200px) {
+    nav ul {
+      gap: 1.5rem;
+      font-size: 1rem;
+    }
+  }
+
+  @media (max-width: 900px) {
+    header {
+      flex-direction: column;
+      padding-bottom: 0.5rem;
+    }
+
+    header .logo {
+      font-size: 1.7rem;
+      margin-bottom: 0.5rem;
+    }
+
+    nav ul {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .categories, .dataset-overview {
+      gap: 15px;
+    }
+
+    .image-card {
+      width: 150px;
+    }
+
+    .image-card img {
+      height: 120px;
+    }
+  }
+</style>
+</head>
+<body>
+    <header>
+    <div class="logo">🌼 <span>Flower Identification</span></div>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('home_page') }}" class="active">Home</a></li>
+        <li><a href="{{ url_for('index_page') }}">Identify Flower</a></li>
+        <li><a href="{{ url_for('dataset_page') }}">Dataset</a></li>
+        <li><a href="{{ url_for('model_page') }}">Model</a></li>
+        <li><a href="{{ url_for('about_page') }}">About Flowers</a></li>
+        <li><a href="{{ url_for('results_page') }}">Results</a></li>
+        <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="main-content">
+        <div class="nxt">
+      <h1>Flowers Recognition Dataset</h1>
+      <p>Our comprehensive dataset contains 4,376+ high-quality flower images across 10 distinct categories, sourced from Kaggle and extended with additional flower images.</p>
+    </div>
+
+        <section class="dataset-overview">
+      <div class="card" style="background:#e5e7eb;">
+        <h2>Total Images</h2>
+        <p>4,376+</p>
+      </div>
+      <div class="card" style="background:#e5e7eb;">
+        <h2>Categories</h2>
+        <p>10</p>
+      </div>
+      <div class="card" style="background:#e5e7eb;">
+        <h2>Image Format</h2>
+        <p>JPG</p>
+      </div>
+      <div class="card" style="background:#e5e7eb;">
+        <h2>Avg Resolution</h2>
+        <p>320x240</p>
+      </div>
+    </section>
+
+        <section class="categories">
+      <div class="category">
+        <h3>Daisy</h3>
+        <small>Bellis perennis</small>
+        <span>633 images</span>
+      </div>
+      <div class="category">
+        <h3>Dandelion</h3>
+        <small>Taraxacum officinale</small>
+        <span>898 images</span>
+      </div>
+      <div class="category">
+        <h3>Rose</h3>
+        <small>Rosa spp.</small>
+        <span>784 images</span>
+      </div>
+      <div class="category">
+        <h3>Sunflower</h3>
+        <small>Helianthus annuus</small>
+        <span>699 images</span>
+      </div>
+      <div class="category">
+        <h3>Tulip</h3>
+        <small>Tulipa spp.</small>
+        <span>1,228 images</span>
+      </div>
+      <div class="category">
+        <h3>Lily</h3>
+        <small>Lilium spp.</small>
+        <span>10 images</span>
+      </div>
+      <div class="category">
+        <h3>Marigold</h3>
+        <small>Tagetes spp.</small>
+        <span>10 images</span>
+      </div>
+      <div class="category">
+        <h3>Lotus</h3>
+        <small>Nelumbo nucifera</small>
+        <span>10 images</span>
+      </div>
+      <div class="category">
+        <h3>Hibiscus</h3>
+        <small>Hibiscus rosa-sinensis</small>
+        <span>10 images</span>
+      </div>
+      <div class="category">
+        <h3>Jasmine</h3>
+        <small>Jasminum spp.</small>
+        <span>12 images</span>
+      </div>
+    </section>
+
+        <section class="stats">
+      <h2>Dataset Statistics</h2>
+      <p>Largest category: Tulip (1,228 images)</p>
+      <p>Smallest category: Jasmine (144 images)</p>
+      <p>Average per category: ~437 images</p>
+      <p>Data source: Kaggle + Custom Images</p>
+    </section>
+
+        <section class="sample-images">
+      <h2>Sample Images from Dataset</h2>
+      <div class="image-grid">
+        <div class="image-card">
+          <img src="{{ url_for('static', filename='images/daisy.jpg') }}" alt="Daisy">
+          <p>Daisy<br>633 images</p>
+        </div>
+        <div class="image-card">
+          <img src="{{ url_for('static', filename='images/deadlion.jpg') }}" alt="Dandelion">
+          <p>Dandelion<br>898 images</p>
+        </div>
+        <div class="image-card">
+          <img src="{{ url_for('static', filename='images/rose.jpg') }}" alt="Rose">
+          <p>Rose<br>784 images</p>
+        </div>
+        <div class="image-card">
+          <img src="{{ url_for('static', filename='images/sunflower.jpg') }}" alt="Sunflower">
+          <p>Sunflower<br>699 images</p>
+        </div>
+        <div class="image-card">
+          <img src="{{ url_for('static', filename='images/tulip.jpg') }}" alt="Tulip">
+          <p>Tulip<br>1,228 images</p>
+        </div>
+        <div class="image-card">
+          <img src="{{ url_for('static', filename='images/Lily.jpg') }}" alt="Lily">
+          <p>Lily<br>150 images</p>
+        </div>
+        <div class="image-card">
+          <img src="{{ url_for('static', filename='images/Marigold.jpg') }}" alt="Marigold">
+          <p>Marigold<br>160 images</p>
+        </div>
+        <div class="image-card">
+          <img src="{{ url_for('static', filename='images/Lotus.jpg') }}" alt="Lotus">
+          <p>Lotus<br>180 images</p>
+        </div>
+        <div class="image-card">
+          <img src="{{ url_for('static', filename='images/Hibiscus.jpg') }}" alt="Hibiscus">
+          <p>Hibiscus<br>200 images</p>
+        </div>
+        <div class="image-card">
+          <img src="{{ url_for('static', filename='images/Jasmine.jpg') }}" alt="Jasmine">
+          <p>Jasmine<br>144 images</p>
+        </div>
+      </div>
+    </section>
+
+        <section class="prep">
+      <div class="prep-card">
+        <h3>1. Data Collection</h3>
+        <p>Sourced from Kaggle's Flowers Recognition dataset and extended with 5 additional flower categories.</p>
+      </div>
+      <div class="prep-card">
+        <h3>2. Image Preprocessing</h3>
+        <p>Standardized image sizes, normalized pixel values, and applied data augmentation techniques.</p>
+      </div>
+      <div class="prep-card">
+        <h3>3. Train/Test Split</h3>
+        <p>80% training, 20% testing split with stratified sampling to maintain class balance.</p>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

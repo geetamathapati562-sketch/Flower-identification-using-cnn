@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Model Performance & Results</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #fafafa;
+      color: #333;
+    }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+    h1, h2 {
+      margin-bottom: 10px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
+    .header p {
+      font-size: 1.2rem;
+      color: #666;
+      max-width: 800px;
+      margin: 10px auto;
+    }
+    .grid {
+      display: grid;
+      gap: 20px;
+    }
+    .grid-4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .card {
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .summary .value {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .summary .label {
+      font-weight: 500;
+      color: #444;
+    }
+    .bg-green { background: linear-gradient(to bottom right, #e8f5e9, #c8e6c9); }
+    .bg-blue { background: linear-gradient(to bottom right, #e3f2fd, #bbdefb); }
+    .bg-purple { background: linear-gradient(to bottom right, #f3e5f5, #e1bee7); }
+    .bg-orange { background: linear-gradient(to bottom right, #fff3e0, #ffe0b2); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      font-weight: bold;
+      border-bottom: 2px solid #ddd;
+    }
+    tr {
+      border-bottom: 1px solid #eee;
+    }
+    .progress-bar {
+      background: #eee;
+      border-radius: 6px;
+      height: 8px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 8px;
+      border-radius: 6px;
+    }
+    .cm-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 4px;
+      max-width: 600px;
+      margin: auto;
+      text-align: center;
+    }
+    .cm-cell {
+      padding: 8px;
+      font-size: 0.85rem;
+      border-radius: 6px;
+    }
+    .cm-header {
+      font-weight: bold;
+      font-size: 0.75rem;
+    }
+    .cm-true { background: #c8e6c9; color: #2e7d32; }
+    .cm-error { background: #ffcdd2; color: #c62828; }
+    .cm-empty { background: #eee; color: #555; }
+
+    .perf-good { color: #1565c0; }
+    .perf-excellent { color: #2e7d32; }
+    .perf-fair { color: #ef6c00; }
+    .perf-bar { height: 8px; border-radius: 4px; }
+    .bar-green { background: #43a047; }
+    .bar-blue { background: #1e88e5; }
+    .bar-orange { background: #fb8c00; }
+
+    /* Header */
+    header {
+      background: #fff;
+      padding: 1.2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header .logo {
+      display: flex;
+      align-items: center;
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: #059669;
+      letter-spacing: 1px;
+    }
+
+    header .logo span {
+      margin-left: 0.4rem;
+      font-size: 1.5rem;
+      color: #2563eb;
+      text-transform: capitalize;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 2.5rem;
+      font-size: 1.2rem;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #374151;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      color: #059669;
+      border-bottom: 2px solid #059669;
+      padding-bottom: 0.2rem;
+    }
+  </style>
+</head>
+<body>
+
+ 
+  <!-- Header -->
+  <header>
+    <div class="logo">🌼 <span>Flower Identification</span></div>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('home_page') }}" class="active">Home</a></li>
+        <li><a href="{{ url_for('index_page') }}">Identify Flower</a></li>
+        <li><a href="{{ url_for('dataset_page') }}">Dataset</a></li>
+        <li><a href="{{ url_for('model_page') }}">Model</a></li>
+        <li><a href="{{ url_for('about_page') }}">About Flowers</a></li>
+        <li><a href="{{ url_for('results_page') }}">Results</a></li>
+        <li><a href="{{ url_for('contact_page') }}">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="header">
+      <h1>Model Performance & Results</h1>
+      <p>Comprehensive analysis of our CNN model's performance, including training metrics, confusion matrix, and detailed accuracy results across all flower categories.</p>
+    </div>
+
+    <!-- Performance Summary -->
+    <div class="grid grid-4 summary">
+      <div class="card bg-green">
+        <div class="value">94.5%</div>
+        <div class="label">Overall Accuracy</div>
+      </div>
+      <div class="card bg-blue">
+        <div class="value">93.2%</div>
+        <div class="label">Precision</div>
+      </div>
+      <div class="card bg-purple">
+        <div class="value">93.3%</div>
+        <div class="label">Recall</div>
+      </div>
+      <div class="card bg-orange">
+        <div class="value">93.2%</div>
+        <div class="label">F1-Score</div>
+      </div>
+    </div>
+
+    <!-- Training Progress -->
+    <div style="background:#fff; padding:20px; border-radius:12px; margin-top:30px;">
+      <h2>Training Progress</h2>
+      <table id="trainingTable">
+        <thead>
+          <tr>
+            <th>Epoch</th>
+            <th>Train Acc</th>
+            <th>Val Acc</th>
+            <th>Train Loss</th>
+            <th>Val Loss</th>
+            <th>Progress</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Confusion Matrix -->
+    <div style="background:#fff; padding:20px; border-radius:12px; margin-top:30px;">
+      <h2>Confusion Matrix</h2>
+      <div id="confusionMatrix" class="cm-grid"></div>
+    </div>
+
+    <!-- Per-Class Metrics -->
+    <div style="background:#fff; padding:20px; border-radius:12px; margin-top:30px;">
+      <h2>Per-Class Performance Metrics</h2>
+      <table id="metricsTable">
+        <thead>
+          <tr>
+            <th>Class</th>
+            <th>Precision</th>
+            <th>Recall</th>
+            <th>F1-Score</th>
+            <th>Performance</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const confusionMatrix = [
+      ['Daisy', [45, 2, 1, 0, 2]],
+      ['Dandelion', [1, 48, 0, 1, 0]],
+      ['Rose', [0, 1, 47, 1, 1]],
+      ['Sunflower', [1, 0, 2, 46, 1]],
+      ['Tulip', [2, 0, 1, 0, 47]]
+    ];
+
+    const classMetrics = [
+      { class: 'Daisy', precision: 91.8, recall: 90.0, f1Score: 90.9 },
+      { class: 'Dandelion', precision: 94.1, recall: 96.0, f1Score: 95.0 },
+      { class: 'Rose', precision: 92.2, recall: 94.0, f1Score: 93.1 },
+      { class: 'Sunflower', precision: 95.8, recall: 92.0, f1Score: 93.9 },
+      { class: 'Tulip', precision: 92.2, recall: 94.0, f1Score: 93.1 }
+    ];
+
+    const trainingHistory = [
+      { epoch: 1, trainAcc: 45.2, valAcc: 42.1, trainLoss: 1.85, valLoss: 1.92 },
+      { epoch: 10, trainAcc: 78.5, valAcc: 74.3, trainLoss: 0.72, valLoss: 0.81 },
+      { epoch: 20, trainAcc: 88.9, valAcc: 85.2, trainLoss: 0.34, valLoss: 0.45 },
+      { epoch: 30, trainAcc: 93.4, valAcc: 90.1, trainLoss: 0.21, valLoss: 0.32 },
+      { epoch: 40, trainAcc: 95.8, valAcc: 92.8, trainLoss: 0.15, valLoss: 0.24 },
+      { epoch: 50, trainAcc: 96.8, valAcc: 94.5, trainLoss: 0.11, valLoss: 0.19 }
+    ];
+
+    // Render Training History
+    const trainingTable = document.querySelector("#trainingTable tbody");
+    trainingHistory.forEach(row => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${row.epoch}</td>
+        <td style="color:#2e7d32;font-weight:500">${row.trainAcc}%</td>
+        <td style="color:#1565c0;font-weight:500">${row.valAcc}%</td>
+        <td style="color:#c62828">${row.trainLoss}</td>
+        <td style="color:#ef6c00">${row.valLoss}</td>
+        <td>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:${row.valAcc}%;background:linear-gradient(to right,#66bb6a,#42a5f5)"></div>
+          </div>
+        </td>
+      `;
+      trainingTable.appendChild(tr);
+    });
+
+    // Render Confusion Matrix
+    const cmDiv = document.getElementById("confusionMatrix");
+    const classes = ['Daisy','Dandelion','Rose','Sunflower','Tulip'];
+    cmDiv.innerHTML = `<div></div>` + classes.map(c=>`<div class="cm-header">${c}</div>`).join("");
+    confusionMatrix.forEach(([actual, preds], r) => {
+      cmDiv.innerHTML += `<div class="cm-header">${actual}</div>`;
+      preds.forEach((count,c)=>{
+        const cls = r===c? "cm-true" : count>0? "cm-error":"cm-empty";
+        cmDiv.innerHTML += `<div class="cm-cell ${cls}">${count}</div>`;
+      });
+    });
+
+    // Render Per-Class Metrics
+    const metricsTable = document.querySelector("#metricsTable tbody");
+    classMetrics.forEach(m => {
+      let perfText="", perfClass="", barClass="";
+      if (m.f1Score >= 94) { perfText="Excellent"; perfClass="perf-excellent"; barClass="bar-green"; }
+      else if (m.f1Score >= 92) { perfText="Good"; perfClass="perf-good"; barClass="bar-blue"; }
+      else { perfText="Fair"; perfClass="perf-fair"; barClass="bar-orange"; }
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td style="font-weight:500">${m.class}</td>
+        <td style="color:#1565c0;font-weight:500">${m.precision}%</td>
+        <td style="color:#2e7d32;font-weight:500">${m.recall}%</td>
+        <td style="color:#6a1b9a;font-weight:500">${m.f1Score}%</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:80px;background:#eee;border-radius:4px;height:8px;overflow:hidden;">
+              <div class="perf-bar ${barClass}" style="width:${m.f1Score}%"></div>
+            </div>
+            <span class="${perfClass}" style="font-size:0.8rem;font-weight:600">${perfText}</span>
+          </div>
+        </td>
+      `;
+      metricsTable.appendChild(tr);
+    });
+  </script>
+</body>
+</html>

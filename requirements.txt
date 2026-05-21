@@ -1,0 +1,10 @@
+Flask==2.2.5
+tensorflow==2.13.0
+numpy
+pillow
+opencv-python
+gunicorn
+matplotlib
+scikit-learn
+h5py
+kaggle
